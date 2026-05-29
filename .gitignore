@@ -1,0 +1,11 @@
+semantic_env/
+.env
+__pycache__/
+*.pyc
+data/
+separated/
+transport_objects/
+outputs/
+simulated_output/
+*.wav
+.DS_Store
