@@ -10,7 +10,8 @@ def simulate_transport(song_name, loss_rate=0.07):
     out_dir = Path(f"simulated_output/{song_name}_loss_{int(loss_rate*100)}")
     out_dir.mkdir(parents=True, exist_ok=True)
     
-    # 1. Load the pristine Semantic Objects
+    # 1. Load the original vocal and instrumental objects
+    # sr = sample rate (how fast to cycle through the numbers in the array)
     sr, vocal = wavfile.read(in_dir / "Sv_vocals.wav")
     _, instrumental = wavfile.read(in_dir / "Si_instrumental.wav")
     
@@ -18,19 +19,20 @@ def simulate_transport(song_name, loss_rate=0.07):
     v_bytes = vocal.tobytes()
     i_bytes = instrumental.tobytes()
     
-    # Chunk sizing matching QUIC standard payload maximums
+    # Breaks down vocals and instrumentals into 1200 byte packets.
     PACKET_SIZE = 1200 
     v_chunks = [v_bytes[x:x+PACKET_SIZE] for x in range(0, len(v_bytes), PACKET_SIZE)]
     i_chunks = [i_bytes[x:x+PACKET_SIZE] for x in range(0, len(i_bytes), PACKET_SIZE)]
     
-    print(f"   ↳ Segmented into Packets -> Stream 0 (Vocals): {len(v_chunks)} | Stream 1 (Instruments): {len(i_chunks)}")
+    print(f"Segmented into Packets -> Stream 0 (Vocals): {len(v_chunks)} | Stream 1 (Instruments): {len(i_chunks)}")
     
-    # 2. Simulate Network Drop Vectors (Uniform Random Erasure Mask)
-    np.random.seed(42) # Seeded for scientific reproducibility across EEP vs UEP sweeps
+    # 2. Simulates a weak internet connection by randomly choosingpackets to drop.
+    np.random.seed(42) # "seed" forces random number generator to output randomness pattern every time
+    # Creates a boolean mask for which packets to drop based on the specified loss rate
     v_loss_mask = np.random.rand(len(v_chunks)) < loss_rate
     i_loss_mask = np.random.rand(len(i_chunks)) < loss_rate
     
-    # 3. Apply Your Proposed UEP Decoding Math
+    # 3. Apply the UEP Decoding Math
     # Stream 0 (Vocals) features 30% heavy FEC recovery capability
     # Stream 1 (Instruments) features minimal 4% recovery protection
     v_fec_recovery_threshold = 0.30
