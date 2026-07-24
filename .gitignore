@@ -1,11 +1,34 @@
+# Python virtual environment
 semantic_env/
+bin/
+lib/
+share/
+pyvenv.cfg
 .env
 __pycache__/
 *.pyc
+
+# Generated audio outputs (large)
+*.wav
 data/
 separated/
+separated_2/
+separated_dsp_nn/
 transport_objects/
 outputs/
 simulated_output/
-*.wav
+fec_output/
+noise_robustness/
+
+# Copyrighted input audio — do not distribute
+input/
+
+# Compiled third-party tools (machine-specific)
+tools/
+
+# ns-3 simulator build artifacts (large, machine-specific)
+ns-3.48/build/
+ns-3.48/cmake-cache/
+
+# macOS
 .DS_Store

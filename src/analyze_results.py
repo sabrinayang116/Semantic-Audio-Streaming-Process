@@ -4,20 +4,7 @@ from pathlib import Path
 from scipy.io import wavfile
 from scipy.signal import stft, correlate
 
-# ============================================================================
-# PROJECT PATH SETUP
-# ============================================================================
 
-# analyze_results.py lives inside:
-#
-# semantic_env/
-# ├── src/
-# │   └── analyze_results.py
-# ├── transport_objects/
-# ├── simulated_output/
-# └── ns-3.48/
-#
-# So PROJECT_ROOT is the semantic_env folder.
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
